@@ -17,9 +17,16 @@ namespace fs = std::filesystem;
 #include"VBO.h"
 #include"EBO.h"
 
+#include <nlohmann/json.hpp>
+// for convenience
+using json = nlohmann::json;
 
-const unsigned int width = 800;
-const unsigned int height = 800;
+std::ifstream i("file.json");
+json j;
+i >> j;
+
+const unsigned int width = 1920;
+const unsigned int height = 1080;
 
 
 // Vertices coordinates
