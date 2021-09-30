@@ -22,8 +22,8 @@ namespace fs = std::filesystem;
 using json = nlohmann::json;
 
 std::ifstream i("file.json");
-json j;
-i >> j;
+//json j;
+//i >> j;
 
 const unsigned int width = 1920;
 const unsigned int height = 1080;
