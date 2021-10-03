@@ -57,15 +57,25 @@ GLuint indices[] =
 };
 
 
+nlohmann::json parse_stl(fs::path stl_path)
+{
+	std::ifstream json_file(stl_path);
+	nlohmann::json j;
+	json_file >> j;
+	return j;
+}
+
 
 int main()
 {
 
-	std::ifstream json_file("file.json");
-
+	// std::ifstream json_file("file.json");
 	// nlohmann::json j = nlohmann::json::parse(json_file); // Also works
-	nlohmann::json j;
-	json_file >> j;
+	// nlohmann::json j;
+	// json_file >> j;
+
+	fs::path p1 = "pyramid.json";
+	nlohmann::json j = parse_stl(p1);
 
 	std::cout << j.dump(4) << std::endl;
 
