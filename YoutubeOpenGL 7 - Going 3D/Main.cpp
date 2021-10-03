@@ -17,13 +17,18 @@ namespace fs = std::filesystem;
 #include"VBO.h"
 #include"EBO.h"
 
-#include <nlohmann/json.hpp>
+#include<nlohmann/json.hpp>
 // for convenience
-using json = nlohmann::json;
+// using json = nlohmann::json;
 
-std::ifstream i("file.json");
-//json j;
-//i >> j;
+
+std::ifstream json_file("file.json");
+
+nlohmann::json j = nlohmann::json::parse(json_file);
+
+//int q = 4;
+// j["pi"] = 3.141;
+//json_file >> j;
 
 const unsigned int width = 1920;
 const unsigned int height = 1080;
