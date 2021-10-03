@@ -3,6 +3,7 @@
 namespace fs = std::filesystem;
 //------------------------------
 
+#include <stdio.h>
 #include<iostream>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -22,9 +23,9 @@ namespace fs = std::filesystem;
 // using json = nlohmann::json;
 
 
-std::ifstream json_file("file.json");
 
-nlohmann::json j = nlohmann::json::parse(json_file);
+
+
 
 //int q = 4;
 // j["pi"] = 3.141;
@@ -59,6 +60,15 @@ GLuint indices[] =
 
 int main()
 {
+
+	std::ifstream json_file("file.json");
+
+	// nlohmann::json j = nlohmann::json::parse(json_file); // Also works
+	nlohmann::json j;
+	json_file >> j;
+
+	std::cout << j.dump(4) << std::endl;
+
 	// Initialize GLFW
 	glfwInit();
 
