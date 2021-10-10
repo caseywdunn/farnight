@@ -62,6 +62,15 @@ nlohmann::json parse_stl(fs::path stl_path)
 	std::ifstream json_file(stl_path);
 	nlohmann::json j;
 	json_file >> j;
+
+	// Validation
+	if (! j["indices"].is_array()) {
+		throw std::range_error("invalid indices");
+	}
+	if (!j["vertices"].is_array()) {
+		throw std::range_error("invalid vertices");
+	}
+
 	return j;
 }
 
@@ -78,6 +87,35 @@ int main()
 	nlohmann::json j = parse_stl(p1);
 
 	std::cout << j.dump(4) << std::endl;
+
+	// Parse the arrays as vectors of vectors
+	auto vertices_j = j["vertices"].get<std::vector<std::vector<float>>>();
+	auto indices_j = j["indices"].get<std::vector<std::vector<int>>>();
+
+	std::cout << std::endl << "verteces" << std::endl;
+	for (int i = 0; i < vertices_j.size(); i++)
+	{
+		for (int j = 0; j < vertices_j[i].size(); j++)
+		{
+			std::cout << vertices_j[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
+
+	std::cout << std::endl << "indices" << std::endl;
+	for (int i = 0; i < indices_j.size(); i++)
+	{
+		for (int j = 0; j < indices_j[i].size(); j++)
+		{
+			std::cout << indices_j[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
+
+	//std::cout << vertices_f << std::endl;
+
+	//GLfloat vertices_j[] = j["vertices"];
+	//GLuint indices_j[]   = j["indices"];
 
 	// Initialize GLFW
 	glfwInit();
