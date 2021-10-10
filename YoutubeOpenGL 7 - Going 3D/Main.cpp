@@ -20,17 +20,7 @@ namespace fs = std::filesystem;
 #include"EBO.h"
 
 #include<nlohmann/json.hpp>
-// for convenience
-// using json = nlohmann::json;
 
-
-
-
-
-
-//int q = 4;
-// j["pi"] = 3.141;
-//json_file >> j;
 
 const unsigned int width = 1920;
 const unsigned int height = 1080;
@@ -56,10 +46,6 @@ GLuint indices[] =
 	2, 3, 4,
 	3, 0, 4
 };
-
-
-
-
 
 class O {
 	std::vector<std::vector<float>> vertices;
