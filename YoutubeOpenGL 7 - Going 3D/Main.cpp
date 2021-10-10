@@ -5,6 +5,7 @@ namespace fs = std::filesystem;
 
 #include <stdio.h>
 #include<iostream>
+#include<string>
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<stb/stb_image.h>
@@ -57,65 +58,76 @@ GLuint indices[] =
 };
 
 
-nlohmann::json parse_stl(fs::path stl_path)
-{
-	std::ifstream json_file(stl_path);
-	nlohmann::json j;
-	json_file >> j;
 
-	// Validation
-	if (! j["indices"].is_array()) {
-		throw std::range_error("invalid indices");
-	}
-	if (!j["vertices"].is_array()) {
-		throw std::range_error("invalid vertices");
+
+
+class O {
+	std::vector<std::vector<float>> vertices;
+	std::vector<std::vector<int>> indices;
+
+	nlohmann::json parse_stl(fs::path stl_path)
+	{
+		std::ifstream json_file(stl_path);
+		nlohmann::json j;
+		json_file >> j;
+
+		// Validation
+		if (!j["indices"].is_array()) {
+			throw std::range_error("invalid indices");
+		}
+		if (!j["vertices"].is_array()) {
+			throw std::range_error("invalid vertices");
+		}
+
+		return j;
 	}
 
-	return j;
-}
+public:
+
+	O(fs::path stl_path) {
+		nlohmann::json j = parse_stl(stl_path);
+		vertices = j["vertices"].get<std::vector<std::vector<float>>>();
+		indices = j["indices"].get<std::vector<std::vector<int>>>();
+	}
+
+	std::string summary() {
+		std::string s = "\nObject summary\n";
+
+		s += "verteces\n";
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			for (int j = 0; j < vertices[i].size(); j++)
+			{
+				s += std::to_string(vertices[i][j]) + "\t";
+			}
+			s += "\n";
+		}
+
+		s += "indices\n";
+		for (int i = 0; i < indices.size(); i++)
+		{
+			for (int j = 0; j < indices[i].size(); j++)
+			{
+				s += std::to_string(indices[i][j]) + "\t";
+			}
+			s += "\n";
+		}
+
+
+		return s;
+	}
+};
+
 
 
 int main()
 {
 
-	// std::ifstream json_file("file.json");
-	// nlohmann::json j = nlohmann::json::parse(json_file); // Also works
-	// nlohmann::json j;
-	// json_file >> j;
-
 	fs::path p1 = "pyramid.json";
-	nlohmann::json j = parse_stl(p1);
 
-	std::cout << j.dump(4) << std::endl;
+	O myO(p1);
+	std::cout << myO.summary();
 
-	// Parse the arrays as vectors of vectors
-	auto vertices_j = j["vertices"].get<std::vector<std::vector<float>>>();
-	auto indices_j = j["indices"].get<std::vector<std::vector<int>>>();
-
-	std::cout << std::endl << "verteces" << std::endl;
-	for (int i = 0; i < vertices_j.size(); i++)
-	{
-		for (int j = 0; j < vertices_j[i].size(); j++)
-		{
-			std::cout << vertices_j[i][j] << "\t";
-		}
-		std::cout << std::endl;
-	}
-
-	std::cout << std::endl << "indices" << std::endl;
-	for (int i = 0; i < indices_j.size(); i++)
-	{
-		for (int j = 0; j < indices_j[i].size(); j++)
-		{
-			std::cout << indices_j[i][j] << "\t";
-		}
-		std::cout << std::endl;
-	}
-
-	//std::cout << vertices_f << std::endl;
-
-	//GLfloat vertices_j[] = j["vertices"];
-	//GLuint indices_j[]   = j["indices"];
 
 	// Initialize GLFW
 	glfwInit();
