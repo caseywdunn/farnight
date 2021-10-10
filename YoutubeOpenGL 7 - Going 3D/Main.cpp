@@ -21,10 +21,8 @@ namespace fs = std::filesystem;
 
 #include<nlohmann/json.hpp>
 
-
 const unsigned int width = 1920;
 const unsigned int height = 1080;
-
 
 // Vertices coordinates
 GLfloat vertices[] =
