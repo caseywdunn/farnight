@@ -100,6 +100,25 @@ public:
 
 		return s;
 	}
+
+	std::vector<GLfloat> get_GL_vertices() {
+		std::vector<GLfloat> vertices_flat;
+		return vertices_flat;
+	}
+
+	std::vector<GLuint> get_GL_indices() {
+		//std::vector<int> indices_flat;
+		std::vector<GLuint> indices_flat;
+		for (int i = 0; i < indices.size(); i++)
+		{
+			for (int j = 0; j < indices[i].size(); j++)
+			{
+				indices_flat.push_back(indices[i][j]);
+			}
+		}
+
+		return indices_flat;
+	}
 };
 
 
@@ -108,9 +127,16 @@ int main()
 {
 
 	fs::path p1 = "pyramid.json";
-
 	O myO(p1);
 	std::cout << myO.summary();
+
+	// check contents
+	std::vector<GLuint> indices_gl = myO.get_GL_indices();
+	for (int i = 0; i < indices_gl.size(); i++) {
+		std::cout << indices_gl[i] << "  ";
+	}
+
+	indices = indices_gl;
 
 
 	// Initialize GLFW
