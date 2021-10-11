@@ -112,7 +112,7 @@ public:
 int main()
 {
 
-	fs::path p1 = "pyramid.json";
+	fs::path p1 = "cube.json";
 	O myO(p1);
 	std::cout << myO.summary();
 
@@ -200,9 +200,12 @@ int main()
 	*/
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/assetts/textures/";
+	std::string texFile = "blocks.png";
+	std::string fullPath = parentDir + texPath + "blocks.png";
+	std::cout << fullPath << std::endl;
 
 	// Texture
-	Texture brickTex((parentDir + texPath + "brick.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture brickTex((parentDir + texPath + "blocks.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	brickTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Original code from the tutorial
