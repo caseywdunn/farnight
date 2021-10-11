@@ -35,17 +35,6 @@ GLfloat vertices[] =
 };
 
 
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
-};
-
 
 class O {
 	std::vector<std::vector<float>> vertices;
@@ -142,7 +131,6 @@ int main()
 
 
 	std::cout << indices_gl.size() << std::endl;
-	std::cout << sizeof(indices) << std::endl;
 	std::cout << (sizeof(indices_gl[0]) * indices_gl.size()) << std::endl;
 	
 	GLuint* gltest = &indices_gl[0];
