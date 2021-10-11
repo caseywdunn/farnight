@@ -198,11 +198,15 @@ int main()
 	* folder and then give a relative path from this folder to whatever resource you want to get to.
 	* Also note that this requires C++17, so go to Project Properties, C/C++, Language, and select C++17
 	*/
+
+	fs::path fullTexPath = fs::current_path().fs::path::parent_path() / fs::path("/assetts/textures"); // / fs::path("blocks.png");
+	fs::path parent_dir = fs::current_path().fs::path::parent_path();
+	fs::path resources_dir = fs::path("/assetts/textures");
+	std::cout << fullTexPath.string() << std::endl;
+
 	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
 	std::string texPath = "/assetts/textures/";
 	std::string texFile = "blocks.png";
-	std::string fullPath = parentDir + texPath + "blocks.png";
-	std::cout << fullPath << std::endl;
 
 	// Texture
 	Texture brickTex((parentDir + texPath + "blocks.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
