@@ -28,6 +28,7 @@ const unsigned int height = 1080;
 class O {
 	std::vector<std::vector<float>> vertices;
 	std::vector<std::vector<int>> indices;
+	fs::path texture_path;
 
 	nlohmann::json parse_stl(fs::path stl_path)
 	{
@@ -52,6 +53,7 @@ public:
 		nlohmann::json j = parse_stl(stl_path);
 		vertices = j["vertices"].get<std::vector<std::vector<float>>>();
 		indices = j["indices"].get<std::vector<std::vector<int>>>();
+		texture_path = j["texture"].get<std::string>();
 	}
 
 	std::string summary() {
@@ -105,6 +107,11 @@ public:
 
 		return indices_flat;
 	}
+
+	fs::path get_texture_path() {
+		return texture_path;
+	}
+
 };
 
 
@@ -112,27 +119,13 @@ public:
 int main()
 {
 
-	fs::path p1 = "cube.json";
+	fs::path p1 = "pyramid.json";
 	O myO(p1);
 	std::cout << myO.summary();
 
 	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
 	std::vector<GLuint> indices_gl = myO.get_GL_indices();
-
-	// check contents
-	for (int i = 0; i < indices_gl.size(); i++) {
-		std::cout << indices_gl[i] << "  ";
-	}
-	std::cout << std::endl;
-
-	std::cout << indices_gl.size() << std::endl;
-	std::cout << (sizeof(indices_gl[0]) * indices_gl.size()) << std::endl;
-	
-	GLuint* gltest = &indices_gl[0];
-	for (int i = 0; i < indices_gl.size(); i++) {
-		std::cout << gltest[i] << "  ";
-	}
-	std::cout << std::endl;
+	fs::path texture_path = myO.get_texture_path();
 
 
 	// Initialize GLFW
@@ -192,24 +185,16 @@ int main()
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
-	/*
-	* I'm doing this relative path thing in order to centralize all the resources into one folder and not
-	* duplicate them between tutorial folders. You can just copy paste the resources from the 'Resources'
-	* folder and then give a relative path from this folder to whatever resource you want to get to.
-	* Also note that this requires C++17, so go to Project Properties, C/C++, Language, and select C++17
-	*/
 
-	fs::path fullTexPath = fs::current_path().fs::path::parent_path() / fs::path("/assetts/textures"); // / fs::path("blocks.png");
+	// https://docs.microsoft.com/en-us/cpp/standard-library/path-class?view=msvc-160
+	// https://en.cppreference.com/w/cpp/filesystem/path/append
 	fs::path parent_dir = fs::current_path().fs::path::parent_path();
-	fs::path resources_dir = fs::path("/assetts/textures");
-	std::cout << fullTexPath.string() << std::endl;
-
-	std::string parentDir = (fs::current_path().fs::path::parent_path()).string();
-	std::string texPath = "/assetts/textures/";
-	std::string texFile = "blocks.png";
+	fs::path resources_dir = fs::path("assetts") / fs::path("textures");
+	fs::path full_texture_path = parent_dir / resources_dir / texture_path;
+	std::cout << "Texture file:  " << full_texture_path.string() << std::endl;
 
 	// Texture
-	Texture brickTex((parentDir + texPath + "blocks.png").c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture brickTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	brickTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Original code from the tutorial
