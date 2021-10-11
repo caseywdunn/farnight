@@ -34,6 +34,7 @@ GLfloat vertices[] =
 	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
 };
 
+
 // Indices for vertices order
 GLuint indices[] =
 {
@@ -44,6 +45,7 @@ GLuint indices[] =
 	2, 3, 4,
 	3, 0, 4
 };
+
 
 class O {
 	std::vector<std::vector<float>> vertices;
@@ -107,7 +109,6 @@ public:
 	}
 
 	std::vector<GLuint> get_GL_indices() {
-		//std::vector<int> indices_flat;
 		std::vector<GLuint> indices_flat;
 		for (int i = 0; i < indices.size(); i++)
 		{
@@ -135,8 +136,20 @@ int main()
 	for (int i = 0; i < indices_gl.size(); i++) {
 		std::cout << indices_gl[i] << "  ";
 	}
+	std::cout << std::endl;
 
-	indices = indices_gl;
+
+
+
+	std::cout << indices_gl.size() << std::endl;
+	std::cout << sizeof(indices) << std::endl;
+	std::cout << (sizeof(indices_gl[0]) * indices_gl.size()) << std::endl;
+	
+	GLuint* gltest = &indices_gl[0];
+	for (int i = 0; i < indices_gl.size(); i++) {
+		std::cout << gltest[i] << "  ";
+	}
+	std::cout << std::endl;
 
 
 	// Initialize GLFW
@@ -182,7 +195,7 @@ int main()
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(vertices, sizeof(vertices));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	EBO EBO1(&indices_gl[0], (sizeof(indices_gl[0]) * indices_gl.size()));
 
 	// Links VBO attributes such as coordinates and colors to VAO
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
@@ -263,7 +276,7 @@ int main()
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (sizeof(indices_gl[0]) * indices_gl.size()) / sizeof(int), GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
