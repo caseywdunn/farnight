@@ -24,17 +24,6 @@ namespace fs = std::filesystem;
 const unsigned int width = 1920;
 const unsigned int height = 1080;
 
-// Vertices coordinates
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
-};
-
-
 
 class O {
 	std::vector<std::vector<float>> vertices;
@@ -94,6 +83,13 @@ public:
 
 	std::vector<GLfloat> get_GL_vertices() {
 		std::vector<GLfloat> vertices_flat;
+		for (int i = 0; i < vertices.size(); i++)
+		{
+			for (int j = 0; j < vertices[i].size(); j++)
+			{
+				vertices_flat.push_back(vertices[i][j]);
+			}
+		}
 		return vertices_flat;
 	}
 
@@ -120,15 +116,14 @@ int main()
 	O myO(p1);
 	std::cout << myO.summary();
 
-	// check contents
+	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
 	std::vector<GLuint> indices_gl = myO.get_GL_indices();
+
+	// check contents
 	for (int i = 0; i < indices_gl.size(); i++) {
 		std::cout << indices_gl[i] << "  ";
 	}
 	std::cout << std::endl;
-
-
-
 
 	std::cout << indices_gl.size() << std::endl;
 	std::cout << (sizeof(indices_gl[0]) * indices_gl.size()) << std::endl;
@@ -181,7 +176,7 @@ int main()
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(&vertices_gl[0], (sizeof(vertices_gl[0]) * vertices_gl.size()));
 	// Generates Element Buffer Object and links it to indices
 	EBO EBO1(&indices_gl[0], (sizeof(indices_gl[0]) * indices_gl.size()));
 
