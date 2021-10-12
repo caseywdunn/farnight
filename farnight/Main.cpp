@@ -119,7 +119,7 @@ public:
 int main()
 {
 
-	fs::path p1 = "pyramid.json";
+	fs::path p1 = "cube.json";
 	O myO(p1);
 	std::cout << myO.summary();
 
