@@ -118,9 +118,12 @@ public:
 
 int main()
 {
+	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
+	fs::path models_dir = assets_dir / fs::path("models");
 
-	fs::path p1 = "cube.json";
-	O myO(p1);
+	fs::path model_name = "cube.json";
+	fs::path model_path = models_dir / model_name;
+	O myO(model_path);
 	std::cout << myO.summary();
 
 	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
@@ -184,13 +187,9 @@ int main()
 
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-
-
-	// https://docs.microsoft.com/en-us/cpp/standard-library/path-class?view=msvc-160
-	// https://en.cppreference.com/w/cpp/filesystem/path/append
-	fs::path parent_dir = fs::current_path().fs::path::parent_path();
-	fs::path resources_dir = fs::path("assetts") / fs::path("textures");
-	fs::path full_texture_path = parent_dir / resources_dir / texture_path;
+	
+	fs::path textures_dir = assets_dir / fs::path("textures");
+	fs::path full_texture_path = textures_dir / texture_path;
 	std::cout << "Texture file:  " << full_texture_path.string() << std::endl;
 
 	// Texture
