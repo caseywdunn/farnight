@@ -197,10 +197,6 @@ int main()
 	Texture brickTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	brickTex.texUnit(shaderProgram, "tex0", 0);
 
-	// Original code from the tutorial
-	/*Texture brickTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	brickTex.texUnit(shaderProgram, "tex0", 0);*/
-
 	// Variables that help the rotation of the pyramid
 	float rotation = 0.0f;
 	double prevTime = glfwGetTime();
