@@ -193,8 +193,8 @@ int main()
 	std::cout << "Texture file:  " << full_texture_path.string() << std::endl;
 
 	// Texture
-	Texture brickTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	brickTex.texUnit(shaderProgram, "tex0", 0);
+	Texture objectTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	objectTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Variables that help the rotation of the pyramid
 	float rotation = 0.0f;
@@ -242,7 +242,7 @@ int main()
 		// Assigns a value to the uniform; NOTE: Must always be done after activating the Shader Program
 		glUniform1f(uniID, 0.5f);
 		// Binds texture so that is appears in rendering
-		brickTex.Bind();
+		objectTex.Bind();
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
 		// Draw primitives, number of indices, datatype of indices, index of indices
@@ -259,7 +259,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	brickTex.Delete();
+	objectTex.Delete();
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
