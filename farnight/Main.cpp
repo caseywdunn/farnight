@@ -21,8 +21,8 @@ namespace fs = std::filesystem;
 
 #include<nlohmann/json.hpp>
 
-const unsigned int width = 1920;
-const unsigned int height = 1080;
+const unsigned int width = 1024;
+const unsigned int height = 768;
 
 
 class O {
@@ -222,7 +222,7 @@ int main()
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
 		{
-			rotation += 0.5f;
+			rotation += 0.025f;
 			prevTime = crntTime;
 		}
 
