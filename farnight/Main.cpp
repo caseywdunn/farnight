@@ -118,18 +118,20 @@ public:
 
 int main()
 {
+	// Set up paths
 	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
 	fs::path models_dir = assets_dir / fs::path("models");
 
+	// Load the model
 	fs::path model_name = "cube.json";
 	fs::path model_path = models_dir / model_name;
+	std::cout << "Model file:  " << model_path.string() << std::endl;
 	O myO(model_path);
 	std::cout << myO.summary();
 
 	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
 	std::vector<GLuint> indices_gl = myO.get_GL_indices();
 	fs::path texture_path = myO.get_texture_path();
-
 
 	// Initialize GLFW
 	glfwInit();
@@ -160,12 +162,8 @@ int main()
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 	glViewport(0, 0, width, height);
 
-
-
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
-
-
 
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
@@ -188,11 +186,10 @@ int main()
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 	
+	// Texture
 	fs::path textures_dir = assets_dir / fs::path("textures");
 	fs::path full_texture_path = textures_dir / texture_path;
 	std::cout << "Texture file:  " << full_texture_path.string() << std::endl;
-
-	// Texture
 	Texture objectTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	objectTex.texUnit(shaderProgram, "tex0", 0);
 
@@ -252,8 +249,6 @@ int main()
 		// Take care of all GLFW events
 		glfwPollEvents();
 	}
-
-
 
 	// Delete all the objects we've created
 	VAO1.Delete();
