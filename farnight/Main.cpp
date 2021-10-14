@@ -119,11 +119,11 @@ public:
 int main()
 {
 	// Set up paths
-	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
+	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets") / fs::path("blocks");
 	fs::path models_dir = assets_dir / fs::path("models");
 
 	// Load the model
-	fs::path model_name = "cube.json";
+	fs::path model_name = "block.json";
 	fs::path model_path = models_dir / model_name;
 	std::cout << "Model file:  " << model_path.string() << std::endl;
 	O myO(model_path);
