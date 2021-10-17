@@ -119,7 +119,7 @@ public:
 int main()
 {
 	// Set up paths
-	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets") / fs::path("blocks");
+	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
 	fs::path models_dir = assets_dir / fs::path("models");
 
 	// Load the model
