@@ -123,7 +123,7 @@ int main()
 	fs::path models_dir = assets_dir / fs::path("models");
 
 	// Load the model
-	fs::path model_name = "block.json";
+	fs::path model_name = "cube.json";
 	fs::path model_path = models_dir / model_name;
 	std::cout << "Model file:  " << model_path.string() << std::endl;
 	O myO(model_path);
@@ -187,7 +187,7 @@ int main()
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 	
 	// Texture
-	fs::path textures_dir = assets_dir / fs::path("textures");
+	fs::path textures_dir = assets_dir / fs::path("textures") / fs::path("blocks");
 	fs::path full_texture_path = textures_dir / texture_path;
 	std::cout << "Texture file:  " << full_texture_path.string() << std::endl;
 	Texture objectTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -224,8 +224,9 @@ int main()
 		glm::mat4 proj = glm::mat4(1.0f);
 
 		// Assigns different transformations to each matrix
+		// Transform
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
 		// Outputs the matrices into the Vertex Shader
