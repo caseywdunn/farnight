@@ -20,10 +20,12 @@ namespace fs = std::filesystem;
 #include"EBO.h"
 
 #include<nlohmann/json.hpp>
+#include<conio.h>
 
 const unsigned int width = 1024;
 const unsigned int height = 768;
 
+char ch;
 
 class O {
 	std::vector<std::vector<float>> vertices;
@@ -228,6 +230,10 @@ int main()
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+
+		//if (ch == 'w') {
+		//view = glm::translate(view, glm::vec3(0.0f, 1 / 0.0f, -2.0f));
+		//}
 
 		// Outputs the matrices into the Vertex Shader
 		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
