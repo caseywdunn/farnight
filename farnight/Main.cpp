@@ -200,14 +200,15 @@ int main()
 	objectTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Variables that help the rotation of the pyramid
-	float rotation = 0.0f;
+	float rotation_yaw   = 0.0f;
+	float rotation_pitch = 0.0f;
 	double prevTime = glfwGetTime();
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
 	// Variables to control movement
-	float delta = 0.5f;
+	float delta = 0.75f;
 	float delta_yaw = 0.0f;
 	float delta_pitch = 0.0f;
 
@@ -231,6 +232,18 @@ int main()
 			delta_yaw = 0.0f;
 		}
 
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			delta_pitch = -delta;
+			std::cout << "W" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			delta_pitch = delta;
+			std::cout << "S" << std::endl;
+		}
+		else {
+			delta_pitch = 0.0f;
+		}
+
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -243,7 +256,8 @@ int main()
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
 		{
-			rotation += delta_yaw;
+			rotation_yaw += delta_yaw;
+			rotation_pitch += delta_pitch;
 			prevTime = crntTime;
 		}
 
@@ -254,7 +268,8 @@ int main()
 
 		// Assigns different transformations to each matrix
 		// Transform
-		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotation_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotation_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
