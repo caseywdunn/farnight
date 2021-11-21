@@ -24,8 +24,8 @@ namespace fs = std::filesystem;
 
 #define PI 3.1415926538
 
-const unsigned int width = 3840;
-const unsigned int height = 1920;
+const unsigned int width = 1280;
+const unsigned int height = 720;
 
 char ch;
 
@@ -201,7 +201,7 @@ int main()
 	Texture objectTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	objectTex.texUnit(shaderProgram, "tex0", 0);
 
-	// Variables that help the rotation of the pyramid
+	// Variables that help the rotation of the object
 	float rotation_yaw   = 0.0f;
 	float rotation_pitch = 0.0f;
 	float cube_x = 0.0f;
@@ -221,6 +221,11 @@ int main()
 	// Camera angle
 	float camera_pan_theta = 0.0f;
 	float camera_tilt_theta = 0.0f;
+
+	// Camera position
+	float camera_x = 0.0f;
+	float camera_y = 0.0f;
+	float camera_z = 0.0f;
 
 	int m_oldx;
 	int m_x;
@@ -317,10 +322,9 @@ int main()
 
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		// std::cout << "Mouse X: " << xpos << ", " << "Mouse Y: " << ypos << std::endl;
 		camera_pan_theta = (float(xpos) / float(width) - 0.5f) * 2 * PI;
 		camera_tilt_theta = (-(float(ypos) / float(height) - 0.5f)) * 2 * PI;
-		std::cout << "Pan: " << camera_pan_theta << ", " << "Tilt: " << camera_tilt_theta << std::endl;
+		std::cout << "Pan: " << camera_pan_theta << ", " << sin(camera_pan_theta) << " Tilt: " << camera_tilt_theta << std::endl;
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -340,8 +344,44 @@ int main()
 
 		// Initializes matrices so they are not the null matrix
 		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 view = glm::mat4(1.0f);
+		//glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 proj = glm::mat4(1.0f);
+
+
+		// https://learnopengl.com/Getting-started/Camera
+		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+
+		glm::vec3 cameraDirection = glm::vec3(
+			sin(camera_pan_theta),
+			0.0f, 
+			cos(camera_pan_theta)
+		);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+		float Matrix[16];
+		Matrix[0]  = cameraRight[0];
+		Matrix[1]  = cameraRight[1];
+		Matrix[2]  = cameraRight[2];
+		Matrix[3]  = 0;
+		Matrix[4]  = cameraUp[0];
+		Matrix[5]  = cameraUp[1];
+		Matrix[6]  = cameraUp[2];
+		Matrix[7]  = 0;
+		Matrix[8]  = cameraDirection[0];
+		Matrix[9]  = cameraDirection[1];
+		Matrix[10] = cameraDirection[2];
+		Matrix[11] = 0;
+		Matrix[12] = 0;
+		Matrix[13] = 0;
+		Matrix[14] = 0;
+		Matrix[15] = 1.0f;
+
+		glm::mat4 view;
+		view = glm::make_mat4(
+			Matrix
+		);  
 
 		// Assigns different transformations to each matrix
 		// Transform
