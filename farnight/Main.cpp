@@ -215,6 +215,10 @@ int main()
 	float delta_yaw = 0.0f;
 	float delta_pitch = 0.0f;
 
+	int m_oldx;
+	int m_x;
+	int m_oldy;
+	int m_y;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -259,11 +263,11 @@ int main()
 			std::cout << "Mash X" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			cube_x = cube_x + 0.01;
+			cube_x = cube_x - 0.01;
 			std::cout << "RIGHT" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			cube_x = cube_x - 0.01;
+			cube_x = cube_x + 0.01;
 			std::cout << "Left" << std::endl;
 		}
 		else {
@@ -274,11 +278,11 @@ int main()
 			std::cout << "Mash Pitch" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			cube_z = cube_z - 0.01;
+			cube_z = cube_z + 0.01;
 			std::cout << "Up" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			cube_z = cube_z + 0.01;
+			cube_z = cube_z - 0.01;
 			std::cout << "Down" << std::endl;
 		}
 		else {
@@ -289,11 +293,11 @@ int main()
 			std::cout << "Mash Pitch" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			cube_y = cube_y + 0.01;
+			cube_y = cube_y - 0.01;
 			std::cout << "Down" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			cube_y = cube_y - 0.01;
+			cube_y = cube_y + 0.01;
 			std::cout << "Down" << std::endl;
 		}
 		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
@@ -301,9 +305,12 @@ int main()
 			rotation_pitch = 0.0f;
 			cube_x = 0.0f;
 			cube_y = 0.0f;
-			cube_z = 0.0f;
+			cube_z = -2.0f;
 		}
 
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		std::cout << "Mouse X: " << xpos << ", " << "Mouse Y: " << ypos << std::endl;
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
