@@ -219,29 +219,33 @@ int main()
 		// Process keyboard input
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			delta_yaw = 0.0;
-			std::cout << "D" << std::endl;
+			std::cout << "Mash" << std::endl;
 		}
-		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			delta_yaw = delta;
-			std::cout << "D" << std::endl;
+			std::cout << "RIGHT" << std::endl;
 		}
-		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			delta_yaw = -delta;
-			std::cout << "A" << std::endl;
+			std::cout << "Left" << std::endl;
 		}
 		else{
 			delta_yaw = 0.0f;
 		}
-
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			delta_pitch = -delta;
-			std::cout << "W" << std::endl;
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			delta_pitch = 0.0;
+			std::cout << "Mash" << std::endl;
 		}
-		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			delta_pitch = -delta;
+			std::cout << "Up" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 			delta_pitch = delta;
-			std::cout << "S" << std::endl;
+			std::cout << "Down" << std::endl;
 		}
 		else {
 			delta_pitch = 0.0f;
