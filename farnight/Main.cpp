@@ -22,8 +22,8 @@ namespace fs = std::filesystem;
 #include<nlohmann/json.hpp>
 #include<conio.h>
 
-const unsigned int width = 1024;
-const unsigned int height = 768;
+const unsigned int width = 3840;
+const unsigned int height = 1920;
 
 char ch;
 
@@ -219,14 +219,17 @@ int main()
 		// Process keyboard input
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
-
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			delta_yaw = - delta;
-			std::cout << "A" << std::endl;
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			delta_yaw = 0.0;
+			std::cout << "D" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 			delta_yaw = delta;
 			std::cout << "D" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			delta_yaw = -delta;
+			std::cout << "A" << std::endl;
 		}
 		else{
 			delta_yaw = 0.0f;
