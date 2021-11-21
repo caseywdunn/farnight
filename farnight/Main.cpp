@@ -202,6 +202,9 @@ int main()
 	// Variables that help the rotation of the pyramid
 	float rotation_yaw   = 0.0f;
 	float rotation_pitch = 0.0f;
+	float cube_x = 0.0f;
+	float cube_y = 0.0f;
+	float cube_z = -2.0f;
 	double prevTime = glfwGetTime();
 
 	// Enables the Depth Buffer
@@ -219,10 +222,10 @@ int main()
 		// Process keyboard input
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
-
+		// rotate
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			delta_yaw = 0.0;
-			std::cout << "Mash" << std::endl;
+			std::cout << "Mash Yaw" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			delta_yaw = delta;
@@ -237,7 +240,7 @@ int main()
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 			delta_pitch = 0.0;
-			std::cout << "Mash" << std::endl;
+			std::cout << "Mash Pitch" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 			delta_pitch = -delta;
@@ -250,10 +253,55 @@ int main()
 		else {
 			delta_pitch = 0.0f;
 		}
-
+		// move
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			cube_x = cube_x;
+			std::cout << "Mash X" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			cube_x = cube_x + 0.01;
+			std::cout << "RIGHT" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			cube_x = cube_x - 0.01;
+			std::cout << "Left" << std::endl;
+		}
+		else {
+			cube_x = cube_x;
+		}
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			cube_z = cube_z;
+			std::cout << "Mash Pitch" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			cube_z = cube_z - 0.01;
+			std::cout << "Up" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			cube_z = cube_z + 0.01;
+			std::cout << "Down" << std::endl;
+		}
+		else {
+			cube_z = cube_z;
+		}
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			cube_y = cube_y;
+			std::cout << "Mash Pitch" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			cube_y = cube_y + 0.01;
+			std::cout << "Down" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			cube_y = cube_y - 0.01;
+			std::cout << "Down" << std::endl;
+		}
 		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
 			rotation_yaw = 0.0f;
 			rotation_pitch = 0.0f;
+			cube_x = 0.0f;
+			cube_y = 0.0f;
+			cube_z = 0.0f;
 		}
 
 
@@ -282,7 +330,7 @@ int main()
 		// Transform
 		model = glm::rotate(model, glm::radians(rotation_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotation_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+		view = glm::translate(view, glm::vec3(cube_x, cube_y, cube_z));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
 		// Outputs the matrices into the Vertex Shader
