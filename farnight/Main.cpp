@@ -244,6 +244,11 @@ int main()
 			delta_pitch = 0.0f;
 		}
 
+		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
+			rotation_yaw = 0.0f;
+			rotation_pitch = 0.0f;
+		}
+
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
