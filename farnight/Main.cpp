@@ -116,7 +116,11 @@ public:
 
 };
 
-
+void processInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+}
 
 int main()
 {
@@ -202,9 +206,32 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+	// Variables to control movement
+	float delta = 0.5f;
+	float delta_yaw = 0.0f;
+	float delta_pitch = 0.0f;
+
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		// Process keyboard input
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, true);
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			delta_yaw = - delta;
+			std::cout << "A" << std::endl;
+		}
+		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			delta_yaw = delta;
+			std::cout << "D" << std::endl;
+		}
+		else{
+			delta_yaw = 0.0f;
+		}
+
+
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
@@ -216,7 +243,7 @@ int main()
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
 		{
-			rotation += 0.2f;
+			rotation += delta_yaw;
 			prevTime = crntTime;
 		}
 
@@ -230,10 +257,6 @@ int main()
 		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
-
-		//if (ch == 'w') {
-		//view = glm::translate(view, glm::vec3(0.0f, 1 / 0.0f, -2.0f));
-		//}
 
 		// Outputs the matrices into the Vertex Shader
 		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
