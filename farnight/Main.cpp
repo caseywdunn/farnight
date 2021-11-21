@@ -322,8 +322,9 @@ int main()
 
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		camera_pan_theta = (float(xpos) / float(width) - 0.5f) * 2 * PI;
+		camera_pan_theta  = (  float(xpos) / float(width)  - 0.5f)  * 2 * PI;
 		camera_tilt_theta = (-(float(ypos) / float(height) - 0.5f)) * 2 * PI;
+
 		std::cout << "Pan: " << camera_pan_theta << ", " << sin(camera_pan_theta) << " Tilt: " << camera_tilt_theta << std::endl;
 
 		// Specify the color of the background
@@ -353,8 +354,8 @@ int main()
 
 		glm::vec3 cameraDirection = glm::vec3(
 			sin(camera_pan_theta),
-			0.0f, 
-			cos(camera_pan_theta)
+			sin(camera_tilt_theta), 
+			cos(camera_pan_theta) * cos(camera_tilt_theta)
 		);
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
