@@ -22,6 +22,8 @@ namespace fs = std::filesystem;
 #include<nlohmann/json.hpp>
 #include<conio.h>
 
+#define PI 3.1415926538
+
 const unsigned int width = 3840;
 const unsigned int height = 1920;
 
@@ -215,6 +217,11 @@ int main()
 	float delta_yaw = 0.0f;
 	float delta_pitch = 0.0f;
 
+
+	// Camera angle
+	float camera_pan_theta = 0.0f;
+	float camera_tilt_theta = 0.0f;
+
 	int m_oldx;
 	int m_x;
 	int m_oldy;
@@ -310,7 +317,10 @@ int main()
 
 		double xpos, ypos;
 		glfwGetCursorPos(window, &xpos, &ypos);
-		std::cout << "Mouse X: " << xpos << ", " << "Mouse Y: " << ypos << std::endl;
+		// std::cout << "Mouse X: " << xpos << ", " << "Mouse Y: " << ypos << std::endl;
+		camera_pan_theta = (float(xpos) / float(width) - 0.5f) * 2 * PI;
+		camera_tilt_theta = (-(float(ypos) / float(height) - 0.5f)) * 2 * PI;
+		std::cout << "Pan: " << camera_pan_theta << ", " << "Tilt: " << camera_tilt_theta << std::endl;
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
