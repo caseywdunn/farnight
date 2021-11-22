@@ -24,8 +24,8 @@ namespace fs = std::filesystem;
 
 #define PI 3.1415926538
 
-const unsigned int width = 1280;
-const unsigned int height = 720;
+const unsigned int width = 1920;
+const unsigned int height = 1080;
 
 char ch;
 
@@ -226,11 +226,15 @@ int main()
 	float camera_x = 0.0f;
 	float camera_y = 0.0f;
 	float camera_z = 0.0f;
+	float camera_step = 0.1f;
 
-	int m_oldx;
-	int m_x;
-	int m_oldy;
-	int m_y;
+
+	// Mouse polling
+	double xpos_old, ypos_old;
+	glfwGetCursorPos(window, &xpos_old, &ypos_old);
+	double mouse_v_x = 0;
+	double mouse_v_y = 0;
+	double mouse_sensitivity = 0.001f;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -245,87 +249,84 @@ int main()
 		}
 		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 			delta_yaw = delta;
-			std::cout << "RIGHT" << std::endl;
+			std::cout << "Right, " << rotation_yaw << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 			delta_yaw = -delta;
-			std::cout << "Left" << std::endl;
+			std::cout << "Left, " << rotation_yaw << std::endl;
 		}
 		else{
 			delta_yaw = 0.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 			delta_pitch = 0.0;
-			std::cout << "Mash Pitch" << std::endl;
+			std::cout << "Mash Pitch"  << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 			delta_pitch = -delta;
-			std::cout << "Up" << std::endl;
+			std::cout << "Up, " << rotation_pitch << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 			delta_pitch = delta;
-			std::cout << "Down" << std::endl;
+			std::cout << "Down, " << rotation_pitch << std::endl;
 		}
 		else {
 			delta_pitch = 0.0f;
 		}
+
 		// move
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			cube_x = cube_x;
-			std::cout << "Mash X" << std::endl;
+			camera_x = camera_x;
+			std::cout << "Mash" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			cube_x = cube_x - 0.01;
-			std::cout << "RIGHT" << std::endl;
+			camera_x = camera_x - camera_step;
+			std::cout << "Camera right" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			cube_x = cube_x + 0.01;
-			std::cout << "Left" << std::endl;
+			camera_x = camera_x + camera_step;
+			std::cout << "Camera back" << std::endl;
 		}
 		else {
-			cube_x = cube_x;
+			camera_x = camera_x;
 		}
+
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			cube_z = cube_z;
-			std::cout << "Mash Pitch" << std::endl;
+			camera_z = camera_z;
+			std::cout << "Mash" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			cube_z = cube_z + 0.01;
-			std::cout << "Up" << std::endl;
+			camera_z = camera_z + camera_step;
+			std::cout << "Camera forward" << rotation_pitch << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			cube_z = cube_z - 0.01;
-			std::cout << "Down" << std::endl;
+			camera_z = camera_z - camera_step;
+			std::cout << "Camera back" << std::endl;
 		}
 		else {
-			cube_z = cube_z;
+			camera_z = camera_z;
 		}
+
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			cube_y = cube_y;
-			std::cout << "Mash Pitch" << std::endl;
+			camera_y = camera_y;
+			std::cout << "Mash" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			cube_y = cube_y - 0.01;
-			std::cout << "Down" << std::endl;
+			camera_y = camera_y - camera_step;
+			std::cout << "Camera Down" << std::endl;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			cube_y = cube_y + 0.01;
-			std::cout << "Down" << std::endl;
+			camera_y = camera_y + camera_step;
+			std::cout << "Camera Down" << std::endl;
 		}
+
 		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
 			rotation_yaw = 0.0f;
 			rotation_pitch = 0.0f;
-			cube_x = 0.0f;
-			cube_y = 0.0f;
-			cube_z = -2.0f;
+			camera_x = 0.0f;
+			camera_y = 0.0f;
+			camera_z = 0.0f;
 		}
-
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		camera_pan_theta  = (  float(xpos) / float(width)  - 0.5f)  * 2 * PI;
-		camera_tilt_theta = (-(float(ypos) / float(height) - 0.5f)) * 2 * PI;
-
-		std::cout << "Pan: " << camera_pan_theta << ", " << sin(camera_pan_theta) << " Tilt: " << camera_tilt_theta << std::endl;
 
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -341,6 +342,18 @@ int main()
 			rotation_yaw += delta_yaw;
 			rotation_pitch += delta_pitch;
 			prevTime = crntTime;
+
+			double xpos, ypos;
+			glfwGetCursorPos(window, &xpos, &ypos);
+
+			mouse_v_x = xpos - xpos_old;
+			xpos_old = xpos;
+
+			mouse_v_y = ypos - ypos_old;
+			ypos_old = ypos;
+
+			camera_pan_theta = camera_pan_theta + mouse_v_x * mouse_sensitivity;
+			camera_tilt_theta = camera_tilt_theta - mouse_v_y * mouse_sensitivity;
 		}
 
 		// Initializes matrices so they are not the null matrix
@@ -350,7 +363,11 @@ int main()
 
 
 		// https://learnopengl.com/Getting-started/Camera
-		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 cameraPos = glm::vec3(
+			camera_x,
+			camera_y,
+			camera_z
+		);
 
 		glm::vec3 cameraDirection = glm::vec3(
 			sin(camera_pan_theta),
@@ -384,12 +401,14 @@ int main()
 			Matrix
 		);  
 
+
 		// Assigns different transformations to each matrix
 		// Transform
 		model = glm::rotate(model, glm::radians(rotation_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotation_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-		view = glm::translate(view, glm::vec3(cube_x, cube_y, cube_z));
-		proj = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+		model = glm::translate(model, glm::vec3(cube_x, cube_y, cube_z));
+		view  = glm::translate(view, cameraPos);
+		proj  = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
 		// Outputs the matrices into the Vertex Shader
 		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
