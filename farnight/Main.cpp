@@ -23,9 +23,9 @@ namespace fs = std::filesystem;
 #include<conio.h>
 
 #define PI 3.1415926538
-
-const unsigned int width = 1920;
-const unsigned int height = 1080;
+int glutGet(GLenum state);
+unsigned int width = 1280;
+unsigned int height = 720;
 
 char ch;
 
@@ -236,6 +236,10 @@ int main()
 	double mouse_v_y = 0;
 	double mouse_sensitivity = 0.001f;
 
+	// Set input mode
+	// https://www.glfw.org/docs/3.1/input.html#input_cursor_mode
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -401,6 +405,9 @@ int main()
 			Matrix
 		);  
 
+		if (xpos_old == width) {
+			glfwSetCursorPos(window, 0, ypos_old);
+		}
 
 		// Assigns different transformations to each matrix
 		// Transform
