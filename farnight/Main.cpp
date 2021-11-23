@@ -227,6 +227,9 @@ int main()
 	float camera_y = 0.0f;
 	float camera_z = 0.0f;
 	float camera_step = 0.1f;
+	int camera_forward = 0;
+	int camera_right = 0;
+	int camera_up = 0;
 
 
 	// Mouse polling
@@ -280,48 +283,42 @@ int main()
 
 		// move
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			camera_x = camera_x;
-			std::cout << "Mash" << std::endl;
+			camera_right = 0;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			camera_x = camera_x - camera_step;
-			std::cout << "Camera right" << std::endl;
+			camera_right = 1;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			camera_x = camera_x + camera_step;
-			std::cout << "Camera back" << std::endl;
+			camera_right = -1;
 		}
 		else {
-			camera_x = camera_x;
+			camera_right = 0;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			camera_z = camera_z;
-			std::cout << "Mash" << std::endl;
+			camera_forward = 0;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			camera_z = camera_z + camera_step;
-			std::cout << "Camera forward" << rotation_pitch << std::endl;
+			camera_forward = 1;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			camera_z = camera_z - camera_step;
-			std::cout << "Camera back" << std::endl;
+			camera_forward = -1;
 		}
 		else {
-			camera_z = camera_z;
+			camera_forward = 0;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			camera_y = camera_y;
-			std::cout << "Mash" << std::endl;
+			camera_up = 0;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			camera_y = camera_y - camera_step;
-			std::cout << "Camera Down" << std::endl;
+			camera_up = 1;
 		}
 		else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			camera_y = camera_y + camera_step;
-			std::cout << "Camera Down" << std::endl;
+			camera_up = -1;
+		}
+		else {
+			camera_up = 0;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
@@ -343,10 +340,13 @@ int main()
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
 		{
-			rotation_yaw += delta_yaw;
-			rotation_pitch += delta_pitch;
 			prevTime = crntTime;
 
+			// Object orientation
+			rotation_yaw += delta_yaw;
+			rotation_pitch += delta_pitch;
+
+			// Camera orientation
 			double xpos, ypos;
 			glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -358,6 +358,12 @@ int main()
 
 			camera_pan_theta = camera_pan_theta + mouse_v_x * mouse_sensitivity;
 			camera_tilt_theta = camera_tilt_theta - mouse_v_y * mouse_sensitivity;
+
+			// Camera position
+			camera_x += sin(camera_pan_theta) * camera_step * camera_forward;
+			camera_y += 0;
+			camera_z += cos(camera_pan_theta) * camera_step * camera_forward;
+
 		}
 
 		// Initializes matrices so they are not the null matrix
