@@ -360,9 +360,19 @@ int main()
 			camera_tilt_theta = camera_tilt_theta - mouse_v_y * mouse_sensitivity;
 
 			// Camera position
-			camera_x += sin(camera_pan_theta) * camera_step * camera_forward;
-			camera_y += 0;
-			camera_z += cos(camera_pan_theta) * camera_step * camera_forward;
+
+			float camera_x_delta = 
+				(sin(camera_pan_theta) * camera_step * (-camera_forward)) + 
+				(cos(camera_pan_theta) * camera_step * (-camera_right));
+			float camera_y_delta = 0;
+			float camera_z_delta =
+				(cos(camera_pan_theta) * camera_step * (camera_forward)) +
+				(sin(camera_pan_theta) * camera_step * (-camera_right));
+
+			camera_x += camera_x_delta;
+			camera_y += camera_y_delta;
+			camera_z += camera_z_delta;
+			std::cout << "theta: "<< camera_pan_theta << " x: " << camera_x << " y: " << camera_y  << " z: " << camera_z << std::endl;
 
 		}
 
