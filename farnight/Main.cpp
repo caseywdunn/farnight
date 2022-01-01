@@ -12,6 +12,7 @@ namespace fs = std::filesystem;
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include<glm/gtx/string_cast.hpp>
 
 #include"Texture.h"
 #include"shaderClass.h"
@@ -123,6 +124,34 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 }
+
+// From https://www.3dgep.com/understanding-the-view-matrix/#fps-camera
+// Pitch must be in the range of [-90 ... 90] degrees and 
+// yaw must be in the range of [0 ... 360] degrees.
+// Pitch and yaw variables must be expressed in radians.
+glm::mat4 FPSViewRH(glm::vec3 eye, float pitch, float yaw)
+{
+	// I assume the values are already converted to radians.
+	float cosPitch = cos(pitch);
+	float sinPitch = sin(pitch);
+	float cosYaw = cos(yaw);
+	float sinYaw = sin(yaw);
+
+	glm::vec3 xaxis = { cosYaw, 0, -sinYaw };
+	glm::vec3 yaxis = { sinYaw * sinPitch, cosPitch, cosYaw * sinPitch };
+	glm::vec3 zaxis = { sinYaw * cosPitch, -sinPitch, cosPitch * cosYaw };
+
+	// Create a 4x4 view matrix from the right, up, forward and eye position vectors
+	glm::mat4 viewMatrix = {
+		glm::vec4(xaxis.x,            yaxis.x,            zaxis.x,      0),
+		glm::vec4(xaxis.y,            yaxis.y,            zaxis.y,      0),
+		glm::vec4(xaxis.z,            yaxis.z,            zaxis.z,      0),
+		glm::vec4(-dot(xaxis, eye), -dot(yaxis, eye), -dot(zaxis, eye), 1)
+	};
+
+	return viewMatrix;
+}
+
 
 int main()
 {
@@ -389,14 +418,24 @@ int main()
 			camera_z
 		);
 
+//		glm::vec3 cameraDirection = glm::vec3(
+//			sin(camera_pan_theta),
+//			sin(camera_tilt_theta), 
+//			cos(camera_pan_theta) * cos(camera_tilt_theta)
+//		);
+
 		glm::vec3 cameraDirection = glm::vec3(
-			sin(camera_pan_theta),
-			sin(camera_tilt_theta), 
+			sin(camera_pan_theta) * cos(camera_tilt_theta),
+			sin(camera_tilt_theta),
 			cos(camera_pan_theta) * cos(camera_tilt_theta)
 		);
+
 		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+		// https://www.3dgep.com/understanding-the-view-matrix/
+		// FPS Camera
 
 		float Matrix[16];
 		Matrix[0]  = cameraRight[0];
@@ -411,15 +450,19 @@ int main()
 		Matrix[9]  = cameraDirection[1];
 		Matrix[10] = cameraDirection[2];
 		Matrix[11] = 0;
-		Matrix[12] = 0;
-		Matrix[13] = 0;
-		Matrix[14] = 0;
+		Matrix[12] = camera_x;
+		Matrix[13] = camera_y;
+		Matrix[14] = camera_z;
 		Matrix[15] = 1.0f;
 
 		glm::mat4 view;
 		view = glm::make_mat4(
 			Matrix
-		);  
+		);
+
+
+		// view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
+
 
 		if (xpos_old == width) {
 			glfwSetCursorPos(window, 0, ypos_old);
@@ -453,6 +496,15 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
+
+
+		// debugging output
+		if (crntTime - prevTime >= 1 / 15)
+		{
+			std::cout << "View matrix:  " << std::endl << glm::to_string(view) << std::endl;
+		}
+
+
 	}
 
 	// Delete all the objects we've created
