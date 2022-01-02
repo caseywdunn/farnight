@@ -385,23 +385,23 @@ int main()
 			mouse_v_y = ypos - ypos_old;
 			ypos_old = ypos;
 
-			camera_pan_theta = camera_pan_theta + mouse_v_x * mouse_sensitivity;
-			camera_tilt_theta = camera_tilt_theta - mouse_v_y * mouse_sensitivity;
+			camera_pan_theta -= mouse_v_x * mouse_sensitivity;
+			camera_tilt_theta -= mouse_v_y * mouse_sensitivity;
 
 			// Camera position
 
 			float camera_x_delta = 
 				(sin(camera_pan_theta) * camera_step * (-camera_forward)) + 
-				(cos(camera_pan_theta) * camera_step * (-camera_right));
+				(cos(camera_pan_theta) * camera_step * (camera_right));
 			float camera_y_delta = 0;
 			float camera_z_delta =
-				(cos(camera_pan_theta) * camera_step * (camera_forward)) +
+				(cos(camera_pan_theta) * camera_step * (-camera_forward)) +
 				(sin(camera_pan_theta) * camera_step * (-camera_right));
 
 			camera_x += camera_x_delta;
 			camera_y += camera_y_delta;
 			camera_z += camera_z_delta;
-			std::cout << "theta: "<< camera_pan_theta << " x: " << camera_x << " y: " << camera_y  << " z: " << camera_z << std::endl;
+			std::cout << "pan: "<< camera_pan_theta/PI << "pi tilt: " << camera_tilt_theta/PI << "pi x: " << camera_x << " y: " << camera_y  << " z: " << camera_z << std::endl;
 
 		}
 
@@ -418,7 +418,7 @@ int main()
 			camera_z
 		);
 
-//		glm::vec3 cameraDirection = glm::vec3(
+/*		glm::vec3 cameraDirection = glm::vec3(
 //			sin(camera_pan_theta),
 //			sin(camera_tilt_theta), 
 //			cos(camera_pan_theta) * cos(camera_tilt_theta)
@@ -459,9 +459,9 @@ int main()
 		view = glm::make_mat4(
 			Matrix
 		);
-
-
-		// view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
+*/
+		glm::mat4 view;
+		view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
 
 
 		if (xpos_old == width) {
@@ -473,7 +473,7 @@ int main()
 		model = glm::rotate(model, glm::radians(rotation_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotation_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(cube_x, cube_y, cube_z));
-		view  = glm::translate(view, cameraPos);
+		// view  = glm::translate(view, cameraPos);
 		proj  = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
 		// Outputs the matrices into the Vertex Shader
@@ -501,7 +501,7 @@ int main()
 		// debugging output
 		if (crntTime - prevTime >= 1 / 15)
 		{
-			std::cout << "View matrix:  " << std::endl << glm::to_string(view) << std::endl;
+			//std::cout << "View matrix:  " << std::endl << glm::to_string(view) << std::endl;
 		}
 
 
