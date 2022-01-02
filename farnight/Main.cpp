@@ -155,22 +155,9 @@ glm::mat4 FPSViewRH(glm::vec3 eye, float pitch, float yaw)
 
 int main()
 {
-	// Set up paths
-	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
-	fs::path models_dir = assets_dir / fs::path("models");
-
-	// Load the model
-	fs::path model_name = "cube.json";
-	fs::path model_path = models_dir / model_name;
-	std::cout << "Model file:  " << model_path.string() << std::endl;
-	O myO(model_path);
-	std::cout << myO.summary();
-
-	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
-	std::vector<GLuint> indices_gl = myO.get_GL_indices();
-	fs::path texture_path = myO.get_texture_path();
-
+	// //////////////////////////////////////////////////////
 	// Initialize GLFW
+
 	glfwInit();
 
 	// Tell GLFW what version of OpenGL we are using 
@@ -202,6 +189,66 @@ int main()
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
 
+
+
+	// Gets ID of uniform called "scale"
+	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+	// Set input mode
+	// https://www.glfw.org/docs/3.1/input.html#input_cursor_mode
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	
+	double prevTime = glfwGetTime();
+
+	// Enables the Depth Buffer
+	glEnable(GL_DEPTH_TEST);
+
+
+	// //////////////////////////////////////////////////////
+	// Initialize Character controller
+
+	// Variables to control movement
+	float delta = 0.75f;
+
+	// Camera angle
+	float camera_pan_theta = 0.0f;
+	float camera_tilt_theta = 0.0f;
+
+	// Camera position
+	float camera_x = 0.0f;
+	float camera_y = 0.0f;
+	float camera_z = 0.0f;
+	float camera_step = 0.1f;
+	int camera_forward = 0;
+	int camera_right = 0;
+	int camera_up = 0;
+
+	// Mouse polling
+	double xpos_old, ypos_old;
+	glfwGetCursorPos(window, &xpos_old, &ypos_old);
+	double mouse_v_x = 0;
+	double mouse_v_y = 0;
+	double mouse_sensitivity = 0.001f;
+
+
+	// //////////////////////////////////////////////////////
+    // Set up objects
+
+	// Set up paths
+	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
+	fs::path models_dir = assets_dir / fs::path("models");
+
+	// Load the model
+	fs::path model_name = "cube.json";
+	fs::path model_path = models_dir / model_name;
+	std::cout << "Model file:  " << model_path.string() << std::endl;
+	O myO(model_path);
+	std::cout << myO.summary();
+
+	std::vector<GLfloat> vertices_gl = myO.get_GL_vertices();
+	std::vector<GLuint> indices_gl = myO.get_GL_indices();
+	fs::path texture_path = myO.get_texture_path();
+
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
@@ -220,9 +267,6 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	// Gets ID of uniform called "scale"
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-	
 	// Texture
 	fs::path textures_dir = assets_dir / fs::path("textures") / fs::path("blocks");
 	fs::path full_texture_path = textures_dir / texture_path;
@@ -230,87 +274,19 @@ int main()
 	Texture objectTex(full_texture_path.string().c_str(), GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	objectTex.texUnit(shaderProgram, "tex0", 0);
 
-	// Variables that help the rotation of the object
-	float rotation_yaw   = 0.0f;
-	float rotation_pitch = 0.0f;
+	// Object location
 	float cube_x = 0.0f;
 	float cube_y = 0.0f;
 	float cube_z = -2.0f;
-	double prevTime = glfwGetTime();
 
-	// Enables the Depth Buffer
-	glEnable(GL_DEPTH_TEST);
-
-	// Variables to control movement
-	float delta = 0.75f;
-	float delta_yaw = 0.0f;
-	float delta_pitch = 0.0f;
-
-
-	// Camera angle
-	float camera_pan_theta = 0.0f;
-	float camera_tilt_theta = 0.0f;
-
-	// Camera position
-	float camera_x = 0.0f;
-	float camera_y = 0.0f;
-	float camera_z = 0.0f;
-	float camera_step = 0.1f;
-	int camera_forward = 0;
-	int camera_right = 0;
-	int camera_up = 0;
-
-
-	// Mouse polling
-	double xpos_old, ypos_old;
-	glfwGetCursorPos(window, &xpos_old, &ypos_old);
-	double mouse_v_x = 0;
-	double mouse_v_y = 0;
-	double mouse_sensitivity = 0.001f;
-
-	// Set input mode
-	// https://www.glfw.org/docs/3.1/input.html#input_cursor_mode
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	// Main while loop
+	// //////////////////////////////////////////////////////
+	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Process keyboard input
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
-		// rotate
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			delta_yaw = 0.0;
-			std::cout << "Mash Yaw" << std::endl;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			delta_yaw = delta;
-			std::cout << "Right, " << rotation_yaw << std::endl;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			delta_yaw = -delta;
-			std::cout << "Left, " << rotation_yaw << std::endl;
-		}
-		else{
-			delta_yaw = 0.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			delta_pitch = 0.0;
-			std::cout << "Mash Pitch"  << std::endl;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			delta_pitch = -delta;
-			std::cout << "Up, " << rotation_pitch << std::endl;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			delta_pitch = delta;
-			std::cout << "Down, " << rotation_pitch << std::endl;
-		}
-		else {
-			delta_pitch = 0.0f;
-		}
-
-		// move
+		
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 			camera_right = 0;
 		}
@@ -351,8 +327,8 @@ int main()
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS) {
-			rotation_yaw = 0.0f;
-			rotation_pitch = 0.0f;
+			camera_pan_theta = 0.0f;
+			camera_tilt_theta = 0.0f;
 			camera_x = 0.0f;
 			camera_y = 0.0f;
 			camera_z = 0.0f;
@@ -365,15 +341,11 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
-		// Simple timer
+		// Simple timer for game ticks
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
 		{
 			prevTime = crntTime;
-
-			// Object orientation
-			rotation_yaw += delta_yaw;
-			rotation_pitch += delta_pitch;
 
 			// Camera orientation
 			double xpos, ypos;
@@ -391,7 +363,6 @@ int main()
 			if (new_camera_tilt_theta >= -PI / 2 && new_camera_tilt_theta <= PI / 2) {
 				camera_tilt_theta = new_camera_tilt_theta;
 			}
-			//camera_tilt_theta -= mouse_v_y * mouse_sensitivity;
 
 			// Camera position
 
@@ -412,8 +383,7 @@ int main()
 
 		// Initializes matrices so they are not the null matrix
 		glm::mat4 model = glm::mat4(1.0f);
-		//glm::mat4 view = glm::mat4(1.0f);
-		glm::mat4 proj = glm::mat4(1.0f);
+		glm::mat4 proj  = glm::mat4(1.0f);
 
 
 		// https://learnopengl.com/Getting-started/Camera
@@ -423,48 +393,6 @@ int main()
 			camera_z
 		);
 
-/*		glm::vec3 cameraDirection = glm::vec3(
-//			sin(camera_pan_theta),
-//			sin(camera_tilt_theta), 
-//			cos(camera_pan_theta) * cos(camera_tilt_theta)
-//		);
-
-		glm::vec3 cameraDirection = glm::vec3(
-			sin(camera_pan_theta) * cos(camera_tilt_theta),
-			sin(camera_tilt_theta),
-			cos(camera_pan_theta) * cos(camera_tilt_theta)
-		);
-
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
-
-		// https://www.3dgep.com/understanding-the-view-matrix/
-		// FPS Camera
-
-		float Matrix[16];
-		Matrix[0]  = cameraRight[0];
-		Matrix[1]  = cameraRight[1];
-		Matrix[2]  = cameraRight[2];
-		Matrix[3]  = 0;
-		Matrix[4]  = cameraUp[0];
-		Matrix[5]  = cameraUp[1];
-		Matrix[6]  = cameraUp[2];
-		Matrix[7]  = 0;
-		Matrix[8]  = cameraDirection[0];
-		Matrix[9]  = cameraDirection[1];
-		Matrix[10] = cameraDirection[2];
-		Matrix[11] = 0;
-		Matrix[12] = camera_x;
-		Matrix[13] = camera_y;
-		Matrix[14] = camera_z;
-		Matrix[15] = 1.0f;
-
-		glm::mat4 view;
-		view = glm::make_mat4(
-			Matrix
-		);
-*/
 		glm::mat4 view;
 		view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
 
@@ -475,10 +403,7 @@ int main()
 
 		// Assigns different transformations to each matrix
 		// Transform
-		model = glm::rotate(model, glm::radians(rotation_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(rotation_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(cube_x, cube_y, cube_z));
-		// view  = glm::translate(view, cameraPos);
 		proj  = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
 
 		// Outputs the matrices into the Vertex Shader
@@ -501,14 +426,6 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
-
-
-		// debugging output
-		if (crntTime - prevTime >= 1 / 15)
-		{
-			//std::cout << "View matrix:  " << std::endl << glm::to_string(view) << std::endl;
-		}
-
 
 	}
 
