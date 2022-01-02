@@ -386,7 +386,12 @@ int main()
 			ypos_old = ypos;
 
 			camera_pan_theta -= mouse_v_x * mouse_sensitivity;
-			camera_tilt_theta -= mouse_v_y * mouse_sensitivity;
+
+			double new_camera_tilt_theta = camera_tilt_theta - mouse_v_y * mouse_sensitivity;
+			if (new_camera_tilt_theta >= -PI / 2 && new_camera_tilt_theta <= PI / 2) {
+				camera_tilt_theta = new_camera_tilt_theta;
+			}
+			//camera_tilt_theta -= mouse_v_y * mouse_sensitivity;
 
 			// Camera position
 
