@@ -269,7 +269,8 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
-		// Process keyboard input
+		// //////////////////////////////////////////////////////
+		// Character control
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
 		
@@ -320,13 +321,6 @@ int main()
 			camera_z = 0.0f;
 		}
 
-		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		// Clean the back buffer and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Tell OpenGL which Shader Program we want to use
-		shaderProgram.Activate();
-
 		// Simple timer for game ticks
 		double crntTime = glfwGetTime();
 		if (crntTime - prevTime >= 1 / 60)
@@ -366,10 +360,6 @@ int main()
 
 		}
 
-		// Initializes matrices so they are not the null matrix
-		glm::mat4 model = glm::mat4(1.0f);
-		glm::mat4 proj  = glm::mat4(1.0f);
-
 		// https://learnopengl.com/Getting-started/Camera
 		glm::vec3 cameraPos = glm::vec3(
 			camera_x,
@@ -377,12 +367,25 @@ int main()
 			camera_z
 		);
 
-		glm::mat4 view;
-		view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
+		glm::mat4 view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
 
 		if (xpos_old == width) {
 			glfwSetCursorPos(window, 0, ypos_old);
 		}
+
+		// //////////////////////////////////////////////////////
+		// Draw
+
+		// Specify the color of the background
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		// Clean the back buffer and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Tell OpenGL which Shader Program we want to use
+		shaderProgram.Activate();
+
+		// Initializes matrices so they are not the null matrix
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 proj = glm::mat4(1.0f);
 
 		// Assigns different transformations to each matrix
 		// Transform
