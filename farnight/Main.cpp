@@ -1,8 +1,5 @@
-//------- Ignore this ----------
 #include<filesystem>
 namespace fs = std::filesystem;
-//------------------------------
-
 #include<stdio.h>
 #include<iostream>
 #include<string>
@@ -27,8 +24,6 @@ namespace fs = std::filesystem;
 int glutGet(GLenum state);
 unsigned int width = 1280;
 unsigned int height = 720;
-
-char ch;
 
 class O {
 	std::vector<std::vector<float>> vertices;
@@ -84,7 +79,6 @@ public:
 			s += "\n";
 		}
 
-
 		return s;
 	}
 
@@ -119,15 +113,9 @@ public:
 
 };
 
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-}
-
 // From https://www.3dgep.com/understanding-the-view-matrix/#fps-camera
-// Pitch must be in the range of [-90 ... 90] degrees and 
-// yaw must be in the range of [0 ... 360] degrees.
+// Pitch must be in the range of [-pi/2 ... pi/2] radians and 
+// yaw must be in the range of [0 ... 2pi] radians.
 // Pitch and yaw variables must be expressed in radians.
 glm::mat4 FPSViewRH(glm::vec3 eye, float pitch, float yaw)
 {
@@ -188,8 +176,6 @@ int main()
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("default.vert", "default.frag");
-
-
 
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
@@ -365,7 +351,6 @@ int main()
 			}
 
 			// Camera position
-
 			float camera_x_delta = 
 				(sin(camera_pan_theta) * camera_step * (-camera_forward)) + 
 				(cos(camera_pan_theta) * camera_step * (camera_right));
@@ -385,7 +370,6 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 proj  = glm::mat4(1.0f);
 
-
 		// https://learnopengl.com/Getting-started/Camera
 		glm::vec3 cameraPos = glm::vec3(
 			camera_x,
@@ -395,7 +379,6 @@ int main()
 
 		glm::mat4 view;
 		view = FPSViewRH(cameraPos, camera_tilt_theta, camera_pan_theta);
-
 
 		if (xpos_old == width) {
 			glfwSetCursorPos(window, 0, ypos_old);
@@ -426,7 +409,6 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
-
 	}
 
 	// Delete all the objects we've created
