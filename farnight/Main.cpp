@@ -218,7 +218,7 @@ int main()
 
 
 	// //////////////////////////////////////////////////////
-    // Set up objects
+    // Initialize objects
 
 	// Set up paths
 	fs::path assets_dir = fs::current_path().fs::path::parent_path() / fs::path("assets");
@@ -391,6 +391,12 @@ int main()
 		// Transform
 		model = glm::translate(model, glm::vec3(cube_x, cube_y, cube_z));
 		proj  = glm::perspective(glm::radians(45.0f), (float)width / height, 0.1f, 100.0f);
+
+		// Try a second cube
+		glm::mat4 modelb = glm::mat4(1.0f);
+		modelb = glm::translate(model, glm::vec3(cube_x, cube_y+3, cube_z));
+		int modelbLoc = glGetUniformLocation(shaderProgram.ID, "modelb");
+		glUniformMatrix4fv(modelbLoc, 1, GL_FALSE, glm::value_ptr(modelb));
 
 		// Outputs the matrices into the Vertex Shader
 		int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
