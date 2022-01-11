@@ -23,6 +23,9 @@ namespace fs = std::filesystem;
 #include<time.h>
 
 #define PI 3.1415926538
+
+Movement movement;
+
 int glutGet(GLenum state);
 unsigned int width = 1280;
 unsigned int height = 720;
@@ -281,9 +284,7 @@ int main()
 		float cube_y = 0.0f;
 		float cube_z = 0.0f;
 
-		Movement cameraPos;
-
-		glm::mat4 view = FPSViewRH(Movement::cameraPos, camera_tilt_theta, camera_pan_theta);
+		glm::mat4 view = FPSViewRH(movement.cameraPos, movement.camera_tilt_theta, movement.camera_pan_theta);
 
 		// //////////////////////////////////////////////////////
 		// Draw

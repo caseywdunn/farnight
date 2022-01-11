@@ -31,15 +31,16 @@ class Movement {
 
 	// Mouse polling
 	double xpos_old, ypos_old;
-	int glfwGetCursorPos(window, &xpos_old, &ypos_old);
 	double mouse_v_x = 0;
 	double mouse_v_y = 0;
 	double mouse_sensitivity = 0.001f;
 
 	double xpos, ypos;
 
-	void movement()
+	void movement(GLFWwindow* window, int width)
 	{
+
+		int glfwGetCursorPos(window, &xpos_old, &ypos_old);
 
 		// //////////////////////////////////////////////////////
 	// Initialize Character controller
