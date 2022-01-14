@@ -265,14 +265,22 @@ endif()
 ################################################################################
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
+        "glad"
         "glfw3;"
         "opengl32"
     )
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x86")
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
+        "glad"
         "glfw3;"
         "opengl32"
     )
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 
+######### Custom
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          "${PROJECT_SOURCE_DIR}/Libraries/include"
+                          )
