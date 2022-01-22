@@ -13,3 +13,4 @@ Resources we drew on for this project:
     mkdir build
     cd build 
     cmake -G "MinGW Makefiles" .. # On Windows
+    cmake --build .

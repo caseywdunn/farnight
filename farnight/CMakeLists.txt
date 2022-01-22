@@ -32,5 +32,9 @@ include_directories(${CMAKE_SOURCE_DIR}/Libraries/include/GLFW)
 link_directories(${CMAKE_SOURCE_DIR}/Libraries/lib)
 target_link_libraries(Farnight glfw)
 
+
+include_directories(${CMAKE_SOURCE_DIR}/Libraries/include)
+
+
 # Tell C++ compiler to use C++20 features.
 target_compile_features(Farnight PUBLIC cxx_std_20)
