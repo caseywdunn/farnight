@@ -19,6 +19,7 @@ project(Farnight VERSION 0.001)
 # add the executable
 add_executable(Farnight 
 Main.cpp
+glad.c
 EBO.cpp
 shaderClass.cpp
 stb.cpp
@@ -30,11 +31,8 @@ VBO.cpp
 # https://stackoverflow.com/questions/28597351/how-do-i-add-a-library-path-in-cmake
 include_directories(${CMAKE_SOURCE_DIR}/Libraries/include/GLFW)
 link_directories(${CMAKE_SOURCE_DIR}/Libraries/lib)
-#target_link_libraries(Farnight glfw)
-
 
 include_directories(${CMAKE_SOURCE_DIR}/Libraries/include)
-
 
 # Tell C++ compiler to use C++20 features.
 target_compile_features(Farnight PUBLIC cxx_std_20)
