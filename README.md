@@ -10,5 +10,6 @@ Resources we drew on for this project:
 ## Building
 
     cd farnight/
-    cmake -S "." -B "build" -G "Visual Studio 16 2019" -A "x64"
-    cmake --build "build"
+    mkdir build
+    cd build 
+    cmake -G "MinGW Makefiles" .. # On Windows
