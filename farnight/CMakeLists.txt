@@ -31,6 +31,7 @@ VBO.cpp
 # https://stackoverflow.com/questions/28597351/how-do-i-add-a-library-path-in-cmake
 include_directories(${CMAKE_SOURCE_DIR}/Libraries/include/GLFW)
 link_directories(${CMAKE_SOURCE_DIR}/Libraries/lib)
+target_link_libraries(Farnight glfw)
 
 include_directories(${CMAKE_SOURCE_DIR}/Libraries/include)
 
