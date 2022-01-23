@@ -3,12 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 # set the project name
 project(Farnight VERSION 0.001)
 
-# https://www.glfw.org/docs/3.3/build_guide.html#build_link_cmake_source
-#set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-#set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-#set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-#add_subdirectory(Libraries/include/)
-#target_link_libraries(myapp glfw)
 
 
 
@@ -29,9 +23,20 @@ VBO.cpp
 )
 
 # https://stackoverflow.com/questions/28597351/how-do-i-add-a-library-path-in-cmake
-include_directories(${CMAKE_SOURCE_DIR}/Libraries/include/GLFW)
-link_directories(${CMAKE_SOURCE_DIR}/Libraries/lib)
+#include_directories(${CMAKE_SOURCE_DIR}/Libraries/include/GLFW)
+#link_directories(${CMAKE_SOURCE_DIR}/Libraries/lib)
+#target_link_libraries(Farnight glfw)
+
+
+# https://www.glfw.org/docs/3.3/build_guide.html#build_link_cmake_source
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(Libraries/include/glfw-3.3.6)
 target_link_libraries(Farnight glfw)
+#find_package(OpenGL REQUIRED)
+#target_link_libraries(Farnight OpenGL::GL)
+
 
 include_directories(${CMAKE_SOURCE_DIR}/Libraries/include)
 

@@ -14,3 +14,7 @@ Resources we drew on for this project:
     cd build 
     cmake -G "MinGW Makefiles" .. # On Windows
     cmake --build .
+
+# Building GLFW
+
+More or less followed [these instructions](https://youtu.be/XpBGwZNyUh0?t=155), except selected MinGW in configuration and then ran `cmake --build .` in the build directory.
