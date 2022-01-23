@@ -9,6 +9,8 @@ Resources we drew on for this project:
 
 ## Building
 
+First, you need to put the glfw source at Libraries/include/glfw-3.3.6.
+
     cd farnight/
     mkdir build
     cd build 

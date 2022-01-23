@@ -1,5 +1,6 @@
 # custon
 build/
+glfw-3.3.6/
 
 # Prerequisites
 *.d
