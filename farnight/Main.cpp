@@ -356,7 +356,7 @@ int main()
 			camera_x += camera_x_delta;
 			camera_y += camera_y_delta;
 			camera_z += camera_z_delta;
-			std::cout << "pan: "<< camera_pan_theta/PI << "pi tilt: " << camera_tilt_theta/PI << "pi x: " << camera_x << " y: " << camera_y  << " z: " << camera_z << std::endl;
+			//std::cout << "pan: "<< camera_pan_theta/PI << "pi tilt: " << camera_tilt_theta/PI << "pi x: " << camera_x << " y: " << camera_y  << " z: " << camera_z << std::endl;
 
 		}
 
